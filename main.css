@@ -1,0 +1,77 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    list-style: none;
+}
+
+#wrap {
+    outline: none;
+    height: 100vh;
+    min-height: 400px;
+    position: relative;
+    background: url("https://2048game.com/img/pattern/amam.png");
+}
+
+.game-box {
+    width: 500px;
+    height: 500px;
+    border-radius: 5px;
+    background-color: rgb(187, 173, 160);
+    position: relative;
+    top : 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.item-base {
+    width: 20%;
+    height: 20%;
+    border-radius: 3px;
+    margin: 4% 0 0 4%;
+    background-color: rgb(205, 193, 180);
+    float: left;
+}
+
+.item {
+    position: relative;
+    width: 20%;
+    height: 20%;
+    border-radius: 3px;
+    background-color: rgb(238, 228, 218);
+    text-align: center;
+    transition: all .1s;
+
+    top: 4%;
+    left: 4%;
+}
+
+.item p {
+    position: absolute;
+    top : 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Changa One', cursive;
+    font-size: 40px;
+    color: rgb(119, 110, 101);
+}
+
+.arr03 {
+    top: 4%;
+    left: 76%;
+}
+
+.arr01 {
+    top: 4%;
+    left: 28%;
+}
+
+@media (max-width: 800px) {
+    .game-box {
+        width: 320px;
+        height: 320px;
+    }
+    .item p {
+        font-size: 25px;
+    }
+}

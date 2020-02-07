@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<script src="https://hammerjs.github.io/dist/hammer.js"></script>-->
+    <link href="https://fonts.googleapis.com/css?family=Changa+One&display=swap" rel="stylesheet">
+    <link href="main.css" rel="stylesheet" type="text/css">
+    <title>1024 GAME</title>
+</head>
+<body>
+    <div id="wrap" tabindex="0">
+        <ul class="game-box">
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+            <li class="item-base"></li>
+
+            <div class="item">
+                <p>2</p>
+            </div>
+        </ul>
+    </div>
+
+<script src="game1024.js"></script>
+<script>
+
+    // 테스트
+    var wrap = document.querySelector("#wrap");
+    var item = document.querySelector(".item");
+    var itemMargin = item.clientHeight / 5;
+    var itemSize = item.clientHeight + itemMargin;
+
+    window.onresize = function() {
+       itemMargin = item.clientHeight / 5;
+    }
+
+
+    wrap.focus();
+    wrap.onkeydown = function(e){
+//        console.log(item.offsetTop);
+//        console.log(e.keyCode);
+        if(e.keyCode === 38) { // 상
+            item.style.top = item.offsetTop - itemSize + 'px';
+        }
+        if(e.keyCode === 40) { // 하
+            item.style.top = item.offsetTop + itemSize + 'px';
+        }
+        if(e.keyCode === 37) { // 좌
+            item.style.left = item.offsetLeft - itemSize + 'px';
+        }
+        if(e.keyCode === 39) { // 우
+            item.style.left = item.offsetLeft + itemSize + 'px';
+        }
+        if (e.keyCode === 32) {
+           item.className = 'item arr03';
+        }
+        if (e.keyCode === 13) {
+            item.className = 'item arr01';
+        }
+    }
+
+
+
+    var table = [
+        [00, 01, 02, 03],
+        [10, 11, 12, 13],
+        [20, 21, 22, 23],
+        [30, 31, 32, 33]
+    ];
+
+</script>
+</body>
+</html>
