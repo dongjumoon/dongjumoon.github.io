@@ -33,45 +33,82 @@
     float: left;
 }
 
-.item {
-    position: relative;
+div[class^=item-num] {
+    border-radius: 3px;
+    position: absolute;
     width: 20%;
     height: 20%;
-    border-radius: 3px;
-    background-color: rgb(238, 228, 218);
-    text-align: center;
     transition: all .1s;
-
-    top: 4%;
-    left: 4%;
 }
-
-.item p {
+div[class^=item-num]::before {
     position: absolute;
-    top : 50%;
-    left: 50%;
+    top:50%;
+    left:50%;
     transform: translate(-50%, -50%);
     font-family: 'Changa One', cursive;
     font-size: 40px;
-    color: rgb(119, 110, 101);
 }
 
-.arr03 {
-    top: 4%;
-    left: 76%;
-}
+div .item-num2 { background-color: rgb(238, 228, 218); }
+div .item-num2::before { content: '2'; color: rgb(119, 110, 101); }
 
-.arr01 {
-    top: 4%;
-    left: 28%;
-}
+div .item-num4 { background-color: rgb(237, 224, 200); }
+div .item-num4::before { content: '4'; color: rgb(119, 110, 101); }
+
+div .item-num8 { background-color: rgb(242, 177, 121); }
+div .item-num8::before { content: '8'; color: rgb(249, 246, 242); }
+
+div .item-num16 { background-color: rgb(245, 149, 99); }
+div .item-num16::before { content: '16'; color: rgb(249, 246, 242); }
+
+div .item-num32 { background-color: rgb(246, 124, 95); }
+div .item-num32::before { content: '32'; color: rgb(249, 246, 242); }
+
+div .item-num64 { background-color: rgb(246, 94, 59); }
+div .item-num64::before { content: '64'; color: rgb(249, 246, 242); }
+
+div .item-num128 { background-color: rgb(237, 207, 114); }
+div .item-num128::before { content: '128'; color: rgb(249, 246, 242); }
+
+div .item-num256 { background-color: rgb(237, 205, 98); }
+div .item-num256::before { content: '256'; color: rgb(249, 246, 242); }
+
+div .item-num512 { background-color: rgb(237, 200, 80); }
+div .item-num512::before { content: '512'; color: rgb(249, 246, 242); }
+
+div .item-num1024 { background-color: rgb(237, 197, 63); }
+div .item-num1024::before { content: '1024'; color: rgb(249, 246, 242); }
+
+div .item-num2048 { background-color: rgb(237, 194, 46); }
+div .item-num2048::before { content: '2048'; color: rgb(249, 246, 242); }
+
+.xy00 { top: 4%; left: 4%; }
+.xy01 { top: 4%; left: 28%; }
+.xy02 { top: 4%; left: 52%; }
+.xy03 { top: 4%; left: 76%; }
+
+.xy10 { top: 28%; left: 4%; }
+.xy11 { top: 28%; left: 28%; }
+.xy12 { top: 28%; left: 52%; }
+.xy13 { top: 28%; left: 76%; }
+
+.xy20 { top: 52%; left: 4%; }
+.xy21 { top: 52%; left: 28%; }
+.xy22 { top: 52%; left: 52%; }
+.xy23 { top: 52%; left: 76%; }
+
+.xy30 { top: 76%; left: 4%; }
+.xy31 { top: 76%; left: 28%; }
+.xy32 { top: 76%; left: 52%; }
+.xy33 { top: 76%; left: 76%; }
+
 
 @media (max-width: 800px) {
     .game-box {
         width: 320px;
         height: 320px;
     }
-    .item p {
+    div[class^=item-num]::before {
         font-size: 25px;
     }
 }
