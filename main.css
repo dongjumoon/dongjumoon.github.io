@@ -38,7 +38,7 @@ div[class^=item-num] {
     position: absolute;
     width: 20%;
     height: 20%;
-    transition: all .1s;
+    transition: top .1s,left .1s, transform .2s;
 }
 div[class^=item-num]::before {
     position: absolute;
@@ -47,6 +47,9 @@ div[class^=item-num]::before {
     transform: translate(-50%, -50%);
     font-family: 'Changa One', cursive;
     font-size: 40px;
+}
+#wrap .tran {
+    transform: scale(0,0);
 }
 
 div .item-num2 { background-color: rgb(238, 228, 218); }
