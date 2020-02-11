@@ -33,6 +33,15 @@
     float: left;
 }
 
+@keyframes uniteAni {
+    0% {transform: scale(1)}
+    50% {transform: scale(1.2)}
+    100% {transform: scale(1)}
+}
+#wrap .uniteItem { animation: uniteAni .2s }
+#wrap .invisible {
+    transform: scale(0,0);
+}
 div[class^=item-num] {
     border-radius: 3px;
     position: absolute;
@@ -47,9 +56,6 @@ div[class^=item-num]::before {
     transform: translate(-50%, -50%);
     font-family: 'Changa One', cursive;
     font-size: 40px;
-}
-#wrap .tran {
-    transform: scale(0,0);
 }
 
 div .item-num2 { background-color: rgb(238, 228, 218); }
