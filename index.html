@@ -60,17 +60,6 @@
 
         gameBoxData[x][y] = newNum;
 
-        if (emptyPlaces.length === 1) {
-            if (confirmGameOver()) {
-                gameOver();
-            }
-        }
-        emptyPlaces = [
-            '00', '01', '02', '03',
-            '10', '11', '12', '13',
-            '20', '21', '22', '23',
-            '30', '31', '32', '33'
-        ];
     }
 
     function confirmGameOver() {
@@ -106,8 +95,17 @@
 
     var wrap = document.querySelector("#wrap");
     wrap.focus();
-
+    var ready = true;
     wrap.onkeydown = function(e){
+        if (ready === false)
+            return;
+        ready = false;
+        emptyPlaces = [
+            '00', '01', '02', '03',
+            '10', '11', '12', '13',
+            '20', '21', '22', '23',
+            '30', '31', '32', '33'
+        ];
         var score = 0;
         var removeItems = [];
         if(e.keyCode === 38) { // 상
@@ -189,12 +187,12 @@
                         gameBoxData[x][y] = 0;
                         removeItems.push(deleteItem);
                         removePlace(emptyX, emptyY);
-                        emptyX++;
+                        emptyX--;
                         score++;
                         continue;
                     } else {
                         removePlace(emptyX, emptyY);
-                        emptyX++;
+                        emptyX--;
                         if (emptyX === x && emptyY === y){
                             removePlace(emptyX, emptyY);
                             continue;
@@ -239,12 +237,12 @@
                         gameBoxData[x][y] = 0;
                         removeItems.push(deleteItem);
                         removePlace(emptyX, emptyY);
-                        emptyX++;
+                        emptyY++;
                         score++;
                         continue;
                     } else {
                         removePlace(emptyX, emptyY);
-                        emptyX++;
+                        emptyY++;
                         if (emptyX === x && emptyY === y){
                             removePlace(emptyX, emptyY);
                             continue;
@@ -289,12 +287,12 @@
                         gameBoxData[x][y] = 0;
                         removeItems.push(deleteItem);
                         removePlace(emptyX, emptyY);
-                        emptyX++;
+                        emptyY--;
                         score++;
                         continue;
                     } else {
                         removePlace(emptyX, emptyY);
-                        emptyX++;
+                        emptyY--;
                         if (emptyX === x && emptyY === y){
                             removePlace(emptyX, emptyY);
                             continue;
@@ -324,12 +322,29 @@
         for (var a = 0; a < gameBoxData.length; a++) {
             for (var b = 0; b < gameBoxData[a].length; b++) {
                 if (gameBoxData[a][b] === 1024) {
+                    score = 0;
                     youWin();
                     a = gameBoxData.length;
                     break;
                 }
             }
         }
+
+        if (score !== 0) {
+            addNewItem();
+            if (emptyPlaces.length === 1) {
+                if (confirmGameOver()) {
+                    setTimeout(function(){
+                        gameOver();
+                    },1000)
+                }
+            }
+        }
+
+        setTimeout(function(){
+            ready = true;
+        },100)
+
 
     }
 
