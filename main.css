@@ -38,6 +38,7 @@
     50% {transform: scale(1.2)}
     100% {transform: scale(1)}
 }
+/* 애니메이션 변화시간은 uniteAnimationTime 변수와 일치 */
 #wrap .uniteItem { animation: uniteAni .2s }
 #wrap .invisible {
     transform: scale(0,0);
@@ -47,6 +48,7 @@ div[class^=item-num] {
     position: absolute;
     width: 20%;
     height: 20%;
+    /* top ,left 변화시간은 transitionTime 변수와 일치 */
     transition: top .1s,left .1s, transform .2s;
 }
 div[class^=item-num]::before {
