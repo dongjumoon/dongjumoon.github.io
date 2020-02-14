@@ -12,7 +12,6 @@ game1024 = {
         [0, 0, 0, 0]
     ],
     transitionTime: 200,
-    uniteAnimationTime: 300,
     gameBox: {},
     ready: false,
 
@@ -104,7 +103,7 @@ game1024 = {
             for (var i = 0; i < elements.length; i ++) {
                 elements[i].classList.remove('uniteItem');
             }
-        }, this.uniteAnimationTime);
+        }, this.transitionTime);
     },
     moveItem: function(x, y, moveToX, moveToY) {
         var Item = document.querySelector('.xy' + x + y);

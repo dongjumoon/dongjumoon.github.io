@@ -39,7 +39,7 @@
     50% {transform: scale(1.2)}
     100% {transform: scale(1)}
 }
-/* 애니메이션 변화시간은 uniteAnimationTime 변수와 일치 */
+/* 변화시간은 transitionTime 변수와 일치 */
 #wrap .uniteItem { animation: uniteAni .3s }
 #wrap .invisible {
     transform: scale(0,0);
