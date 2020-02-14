@@ -7,7 +7,7 @@
 
 #wrap {
     outline: none;
-    height: 100vh;
+    height: calc(100vh - 60px);
     min-height: 400px;
     position: relative;
     background: url("https://2048game.com/img/pattern/amam.png");
