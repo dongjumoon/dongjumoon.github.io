@@ -5,6 +5,10 @@
     list-style: none;
 }
 
+body {
+    touch-action:none;
+}
+
 #wrap {
     outline: none;
     height: 100vh;
