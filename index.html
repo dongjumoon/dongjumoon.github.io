@@ -18,53 +18,36 @@
     </div>
 <script src="game1024.js"></script>
 <script>
-    document.querySelector('#wrap').style.height = window.innerHeight + 'px';
-
-
     var myElement = document.querySelector('.game-box');
-    var hammer = new Hammer(myElement);
-
-    game1024.start(myElement);
     myElement.focus();
 
-    myElement.addEventListener('keydown', function(e){
+    game1024.start(myElement);
+
+    myElement.onkeydown = action;
+
+    var hammer = new Hammer(myElement);
+    hammer.get('swipe').set({ direction: Hammer.DIRECTION_ALL });
+    hammer.on("swipeleft swiperight swipeup swipedown", action);
+
+    function action(event) {
+        event.preventDefault();
+
         var way;
-        if(e.keyCode === 38) { // 상
+        if(event.keyCode === 38  || event.type === "swipeup") { // 상
             way = 'up';
-        } else if(e.keyCode === 40) { // 하
+        } else if(event.keyCode === 40 || event.type === "swipedown") { // 하
             way = 'down';
-        } else if(e.keyCode === 37) { // 좌
+        } else if(event.keyCode === 37 || event.type === "swipeleft") { // 좌
             way = 'left';
-        } else if(e.keyCode === 39) { // 우
+        } else if(event.keyCode === 39 || event.type === "swiperight") { // 우
             way = 'right';
         } else {
             return;
         }
 
         game1024.action(way);
-        e.preventDefault();
-    });
+    }
 
-    hammer.on("swipeleft swiperight swipeup swipedown", function(e) {
-        var way;
-        if(e.type === "swipeup") { // 상
-            way = 'up';
-        } else if(e.type === "swipedown") { // 하
-            way = 'down';
-        } else if(e.type === "swipeleft") { // 좌
-            way = 'left';
-        } else if(e.type === "swiperight") { // 우
-            way = 'right';
-        } else {
-            return;
-        }
-
-        game1024.action(way);
-        e.preventDefault();
-    });
-
-    alert('window.innerHeight = ' + window.innerHeight);
-    alert('scrollHeight = ' + document.body.scrollHeight);
 </script>
 </body>
 </html>

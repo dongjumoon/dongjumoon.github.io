@@ -1,3 +1,5 @@
+document.body.style.height = window.innerHeight + 'px';
+
 game1024 = {
     emptyXyList: [
         '00', '01', '02', '03',
@@ -17,13 +19,17 @@ game1024 = {
 
     start: function(backgroundElement) {
         this.gameBox = backgroundElement;
-        this.gameBox.innerHTML = "";
+        // this.gameBox.innerHTML = "";
         // 4*4 게임판 배경 생성
         for (var i = 0; i < 16; i++) {
             var li = document.createElement('li');
             li.className = 'item-base';
             this.gameBox.insertAdjacentElement('afterbegin', li);
         }
+
+        var div = document.createElement('div');
+        div.className = 'game-over-screen';
+        this.gameBox.insertAdjacentElement('afterbegin', div);
 
         this.addNewItem();
         this.ready = true;
@@ -71,7 +77,7 @@ game1024 = {
         return false;
     },
     gameOver: function() {
-        alert('game over');
+        document.querySelector('.game-over-screen').style.opacity = 1;
     },
     youWin: function() {
         alert('you win');
