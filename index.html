@@ -20,12 +20,14 @@
 <script>
     var myElement = document.querySelector('.game-box');
     var hammer = new Hammer(myElement);
-    window.scrollTo(0, 1);
 
     game1024.start(myElement);
     myElement.focus();
 
-    myElement.onkeydown = function(e){
+    myElement.addEventListener('wheel', function(e) {
+        e.preventDefault();
+    });
+    myElement.addEventListener('keydown', function(e){
         var way;
         if(e.keyCode === 38) { // 상
             way = 'up';
@@ -41,7 +43,7 @@
 
         game1024.action(way);
         e.preventDefault();
-    }
+    });
 
     hammer.on("swipeleft swiperight panup pandown", function(e) {
         var way;
