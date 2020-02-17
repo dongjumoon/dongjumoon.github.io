@@ -5,9 +5,9 @@
     list-style: none;
 }
 
-body {
-    touch-action:none;
-}
+/*body {*/
+    /*touch-action:none;*/
+/*}*/
 
 #wrap {
     outline: none;

@@ -18,7 +18,7 @@
     </div>
 <script src="game1024.js"></script>
 <script>
-    document.body.style.height = window.innerHeight + 'px';
+
 
     var myElement = document.querySelector('.game-box');
     var hammer = new Hammer(myElement);
@@ -44,11 +44,11 @@
         e.preventDefault();
     });
 
-    hammer.on("swipeleft swiperight panup pandown", function(e) {
+    hammer.on("swipeleft swiperight swipeup swipedown", function(e) {
         var way;
-        if(e.type === "panup") { // 상
+        if(e.type === "swipeup") { // 상
             way = 'up';
-        } else if(e.type === "pandown") { // 하
+        } else if(e.type === "swipedown") { // 하
             way = 'down';
         } else if(e.type === "swipeleft") { // 좌
             way = 'left';
@@ -62,6 +62,8 @@
         e.preventDefault();
     });
 
+    alert('window.innerHeight = ' + window.innerHeight);
+    alert('scrollHeight = ' + document.body.scrollHeight);
 </script>
 </body>
 </html>
