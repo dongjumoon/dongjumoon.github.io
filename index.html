@@ -18,7 +18,7 @@
     </div>
 <script src="game1024.js"></script>
 <script>
-
+    document.body.style.height = window.innerHeight + 'px';
 
     var myElement = document.querySelector('.game-box');
     var hammer = new Hammer(myElement);
@@ -26,9 +26,6 @@
     game1024.start(myElement);
     myElement.focus();
 
-    myElement.addEventListener('wheel', function(e) {
-        e.preventDefault();
-    });
     myElement.addEventListener('keydown', function(e){
         var way;
         if(e.keyCode === 38) { // 상
