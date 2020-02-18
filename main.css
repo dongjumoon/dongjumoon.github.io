@@ -65,7 +65,7 @@ body {
     100% {transform: scale(1)}
 }
 /* 변화시간은 transitionTime 변수와 일치 */
-#wrap .uniteItem { animation: uniteAni .3s }
+#wrap .uniteItem { animation: uniteAni 0.2s }
 #wrap .invisible {
     transform: scale(0,0);
 }
@@ -75,7 +75,7 @@ div[class^=item-num] {
     width: 20%;
     height: 20%;
     /* 변화시간은 transitionTime 변수와 일치 */
-    transition: all .2s;
+    transition: all 0.2s;
 }
 div[class^=item-num]::before {
     position: absolute;

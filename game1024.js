@@ -77,10 +77,14 @@ game1024 = {
         return false;
     },
     gameOver: function() {
-        document.querySelector('.game-over-screen').style.opacity = 1;
+        setTimeout(function() {
+            document.querySelector('.game-over-screen').style.opacity = 1;
+        }, 1000)
     },
     youWin: function() {
-        alert('you win');
+        setTimeout(function() {
+            alert('you win');
+        }, 1000)
     },
     removePlace: function(x, y) {
         var xy = '' + x + y;
@@ -90,26 +94,35 @@ game1024 = {
         }
     },
     removeElement: function(elements) {
-        for (var i = 0; i < elements.length; i++) {
-            elements[i].parentNode.removeChild(elements[i]);
-        }
+        setTimeout(function() {
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].parentNode.removeChild(elements[i]);
+            }
+        }, this.transitionTime)
     },
     addUniteAnimation: function(elements) {
-        for (var i = 0; i < elements.length; i ++) {
-            var clsName = elements[i].className;
-            var xy = clsName.substr(clsName.indexOf('xy') + 2, 2);
+        for (var i = 0; i < elements.length; i++) {
+            var xy = this.getXy(elements[i]);
             var x = xy.charAt(0);
             var y = xy.charAt(1);
 
             this.gameBoxData[x][y] *= 2;
-            elements[i].className = 'item-num' + this.gameBoxData[x][y] + ' xy' + xy;
-            elements[i].classList.add('uniteItem');
         }
         setTimeout(function() {
-            for (var i = 0; i < elements.length; i ++) {
-                elements[i].classList.remove('uniteItem');
+            for (var i = 0; i < elements.length; i++) {
+                var xy = game1024.getXy(elements[i]);
+                var x = xy.charAt(0);
+                var y = xy.charAt(1);
+
+                elements[i].className = 'item-num' + game1024.gameBoxData[x][y] + ' xy' + xy;
+                elements[i].classList.add('uniteItem');
             }
-        }, this.transitionTime);
+            setTimeout(function() {
+                for (var i = 0; i < elements.length; i ++) {
+                    elements[i].classList.remove('uniteItem');
+                }
+            }, game1024.transitionTime);
+        }, this.transitionTime)
     },
     moveItem: function(x, y, moveToX, moveToY) {
         var Item = document.querySelector('.xy' + x + y);
@@ -117,6 +130,10 @@ game1024 = {
         Item.classList.remove('xy' + x + y);
         this.gameBoxData[moveToX][moveToY] = this.gameBoxData[x][y];
         this.gameBoxData[x][y] = 0;
+    },
+    getXy: function(element) {
+        var clsName = element.className;
+        return clsName.substr(clsName.indexOf('xy') + 2, 2);
     },
 
     action: function(way) {
@@ -298,13 +315,11 @@ game1024 = {
 
         if (moveCount > 0) {
             if (removeItemList.length > 0) {
-                setTimeout(function() {
-                    game1024.removeElement(removeItemList);
-                    game1024.addUniteAnimation(uniteItemList);
-                }, this.transitionTime)
+                game1024.removeElement(removeItemList);
+                game1024.addUniteAnimation(uniteItemList);
 
                 if (this.confirmVictory()) {
-                    setTimeout(game1024.youWin,1000);
+                    this.youWin();
                     return;
                 }
             }
@@ -312,7 +327,7 @@ game1024 = {
             this.addNewItem();
             if (this.emptyXyList.length === 0) {
                 if (this.confirmGameOver()) {
-                    setTimeout(game1024.gameOver,1000);
+                    this.gameOver();
                     return;
                 }
             }
