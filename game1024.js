@@ -1,96 +1,109 @@
 document.body.style.height = window.innerHeight + 'px';
 
 game1024 = {
-    emptyXyList: [
+    emptyYxList: [
         '00', '01', '02', '03',
         '10', '11', '12', '13',
         '20', '21', '22', '23',
         '30', '31', '32', '33'
     ],
-    gameBoxData: [
+    rootData: [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ],
     transitionTime: 200,
-    gameBox: {},
-    ready: false,
+    animationTime: 900,
+    root: undefined,
+    readyOfAction: false,
+    gameBaseColumnCount: 4,
+    gameBaseRowCount: 4,
+    startNumber: 2, //2의 n 승 숫자만 가능(디자인 관련문제).
+    goalNumber: Math.pow(2, 10), // startNumber 의 10승
+    numberClassPrefix: 'item-num',
+    yxClassPrefix: 'yx',
 
-    start: function(backgroundElement) {
-        this.gameBox = backgroundElement;
-        // this.gameBox.innerHTML = "";
+    start: function(root) {
+        this.root = root;
+        this.root.innerHTML = "";
         // 4*4 게임판 배경 생성
-        for (var i = 0; i < 16; i++) {
+        for (var i = 0; i < this.gameBaseColumnCount * this.gameBaseRowCount; i++) {
             var li = document.createElement('li');
             li.className = 'item-base';
-            this.gameBox.insertAdjacentElement('afterbegin', li);
+            this.root.insertAdjacentElement('afterbegin', li);
         }
 
         var div = document.createElement('div');
         div.className = 'game-over-screen';
-        this.gameBox.insertAdjacentElement('afterbegin', div);
+        this.root.insertAdjacentElement('afterbegin', div);
 
         this.addNewItem();
-        this.ready = true;
+        this.readyOfAction = true;
     },
     addNewItem: function() {
-        var randomIndex = Math.floor(Math.random() * this.emptyXyList.length);
-        var newNum = Math.random() < 0.8 ? 2 : 4;
-        var newXy = this.emptyXyList[randomIndex];
+        var newNum = this.getNewNumber();
+        var newYx = this.randomChoice(this.emptyYxList);
         var item = document.createElement('div');
-        item.className = 'item-num' + newNum + ' xy' + newXy + ' invisible';
-        this.gameBox.insertAdjacentElement('beforeend', item);
+        item.className = this.numberClassPrefix + newNum + ' ' + this.yxClassPrefix + newYx + ' invisible';
+        this.root.insertAdjacentElement('beforeend', item);
         setTimeout(function(){
-            item.className = 'item-num' + newNum + ' xy' + newXy;
+            item.className = this.numberClassPrefix + newNum + ' ' + this.yxClassPrefix + newYx;
         }, this.transitionTime / 2);
 
-        var x = newXy.charAt(0);
-        var y = newXy.charAt(1);
+        var y = newYx.charAt(0);
+        var x = newYx.charAt(1);
 
-        this.gameBoxData[x][y] = newNum;
-        this.removePlace(x,y);
+        this.rootData[y][x] = newNum;
+        this.removeEmptyYx(y,x);
     },
-    confirmGameOver: function() {
-        for (var x = 0; x < 4; x++) {
-            for (var y = 0; y < 3; y++) {
-                if (this.gameBoxData[x][y] === this.gameBoxData[x][y+1])
+    randomChoice: function(arr) {
+        var randomIndex = Math.floor(Math.random() * arr.length);
+        return arr[randomIndex];
+    },
+    getNewNumber: function() {
+        return Math.random() < 0.8 ? this.startNumber : this.startNumber + this.startNumber;
+    },
+    isGameOver: function() {
+        for (var y = 0; y < this.gameBaseRowCount; y++) {
+            for (var x = 0; x < this.gameBaseColumnCount - 1; x++) {
+                if (this.rootData[y][x] === this.rootData[y][x+1])
                     return false;
             }
         }
-        for (var x = 0; x < 3; x++) {
-            for (var y = 0; y < 4; y++) {
-                if (this.gameBoxData[x][y] === this.gameBoxData[x+1][y])
+        for (var y = 0; y < this.gameBaseRowCount - 1; y++) {
+            for (var x = 0; x < this.gameBaseColumnCount; x++) {
+                if (this.rootData[y][x] === this.rootData[y+1][x])
                     return false;
             }
         }
         return true;
     },
-    confirmVictory: function() {
-        for (var x = 0; x < this.gameBoxData.length; x++) {
-            for (var y = 0; y < this.gameBoxData[x].length; y++) {
-                if (this.gameBoxData[x][y] === 1024) {
+    isVictory: function() {
+        for (var y = 0; y < this.rootData.length; y++) {
+            for (var x = 0; x < this.rootData[y].length; x++) {
+                if (this.rootData[y][x] === this.goalNumber) {
                     return true;
                 }
             }
         }
         return false;
     },
-    gameOver: function() {
+    onGameOver: function() {
         setTimeout(function() {
             document.querySelector('.game-over-screen').style.opacity = 1;
         }, 1000)
     },
-    youWin: function() {
+    onVictory: function() {
         setTimeout(function() {
             alert('you win');
         }, 1000)
     },
-    removePlace: function(x, y) {
-        var xy = '' + x + y;
-        var removeIndex = this.emptyXyList.indexOf(xy);
+    removeEmptyYx: function(y, x) {
+        var yx = '' + y + x;
+        var removeIndex = this.emptyYxList.indexOf(yx);
         if (removeIndex >= 0) {
-            this.emptyXyList.splice(removeIndex, 1);
+            this.emptyYxList.splice(removeIndex, 1);
         }
     },
     removeElement: function(elements) {
@@ -102,44 +115,44 @@ game1024 = {
     },
     addUniteAnimation: function(elements) {
         for (var i = 0; i < elements.length; i++) {
-            var xy = this.getXy(elements[i]);
-            var x = xy.charAt(0);
-            var y = xy.charAt(1);
+            var yx = this.getYx(elements[i]);
+            var y = yx.charAt(0);
+            var x = yx.charAt(1);
 
-            this.gameBoxData[x][y] *= 2;
+            this.rootData[y][x] *= 2;
         }
         setTimeout(function() {
             for (var i = 0; i < elements.length; i++) {
-                var xy = game1024.getXy(elements[i]);
-                var x = xy.charAt(0);
-                var y = xy.charAt(1);
+                var yx = game1024.getYx(elements[i]);
+                var y = yx.charAt(0);
+                var x = yx.charAt(1);
 
-                elements[i].className = 'item-num' + game1024.gameBoxData[x][y] + ' xy' + xy;
+                elements[i].className = this.numberClassPrefix + game1024.rootData[y][x] + ' ' + this.yxClassPrefix + yx;
                 elements[i].classList.add('uniteItem');
             }
             setTimeout(function() {
                 for (var i = 0; i < elements.length; i ++) {
                     elements[i].classList.remove('uniteItem');
                 }
-            }, game1024.transitionTime);
+            }, game1024.animationTime);
         }, this.transitionTime)
     },
-    moveItem: function(x, y, moveToX, moveToY) {
-        var Item = document.querySelector('.xy' + x + y);
-        Item.classList.add('xy' + moveToX + moveToY);
-        Item.classList.remove('xy' + x + y);
-        this.gameBoxData[moveToX][moveToY] = this.gameBoxData[x][y];
-        this.gameBoxData[x][y] = 0;
+    moveItem: function(fromY, fromX, toY, toX) {
+        var Item = document.querySelector('.' + this.yxClassPrefix + fromY + fromX);
+        Item.classList.add(this.yxClassPrefix + toY + toX);
+        Item.classList.remove(this.yxClassPrefix + fromY + fromX);
+        this.rootData[toY][toX] = this.rootData[fromY][fromX];
+        this.rootData[fromY][fromX] = 0;
     },
-    getXy: function(element) {
+    getYx: function(element) {
         var clsName = element.className;
-        return clsName.substr(clsName.indexOf('xy') + 2, 2);
+        return clsName.substr(clsName.indexOf(this.yxClassPrefix) + this.yxClassPrefix.length, 2);
     },
 
     action: function(way) {
-        if (this.ready === false)
+        if (this.readyOfAction === false)
             return;
-        this.ready = false;
+        this.readyOfAction = false;
 
         var operation = {
             up: false,
@@ -149,7 +162,7 @@ game1024 = {
         }
         operation[way] = true;
 
-        this.emptyXyList = [
+        this.emptyYxList = [
             '00', '01', '02', '03',
             '10', '11', '12', '13',
             '20', '21', '22', '23',
@@ -165,35 +178,35 @@ game1024 = {
             // 01 11 21 31
             // 02 12 22 32
             // 03 13 23 33
-            for (var y = 0; y < 4; y++) {
+            for (var x = 0; x < 4; x++) {
                 var moveToX = 0;
-                var moveToY = y;
-                for (var x = 1; x < 4; x++) {
-                    if (this.gameBoxData[x][y] === 0) {
+                var moveToY = x;
+                for (var y = 1; y < 4; y++) {
+                    if (this.rootData[y][x] === 0) {
                         continue;
-                    } else if (this.gameBoxData[moveToX][moveToY] === 0) {
-                        this.moveItem(x, y, moveToX, moveToY);
+                    } else if (this.rootData[moveToX][moveToY] === 0) {
+                        this.moveItem(y, x, moveToX, moveToY);
                         moveCount++;
-                    } else if (this.gameBoxData[moveToX][moveToY] !== this.gameBoxData[x][y]) {
-                        this.removePlace(moveToX, moveToY);
+                    } else if (this.rootData[moveToX][moveToY] !== this.rootData[y][x]) {
+                        this.removeEmptyYx(moveToX, moveToY);
                         moveToX++;
-                        if (!(moveToX === x && moveToY === y)) {
-                            this.moveItem(x, y, moveToX, moveToY);
+                        if (!(moveToX === y && moveToY === x)) {
+                            this.moveItem(y, x, moveToX, moveToY);
                             moveCount++;
                         }
                     } else {
-                        var doubleItem = document.querySelector('.xy' + x + y);
-                        var deleteItem = document.querySelector('.xy' + moveToX + moveToY);
-                        this.moveItem(x, y, moveToX, moveToY);
+                        var doubleItem = document.querySelector('.' + this.yxClassPrefix + y + x);
+                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + moveToX + moveToY);
+                        this.moveItem(y, x, moveToX, moveToY);
                         moveCount++;
                         removeItemList.push(deleteItem);
                         uniteItemList.push(doubleItem);
-                        this.removePlace(moveToX, moveToY);
+                        this.removeEmptyYx(moveToX, moveToY);
                         moveToX++;
                     }
                 }
-                if (this.gameBoxData[moveToX][moveToY] !== 0) {
-                    this.removePlace(moveToX, moveToY);
+                if (this.rootData[moveToX][moveToY] !== 0) {
+                    this.removeEmptyYx(moveToX, moveToY);
                 }
             }
         }
@@ -203,35 +216,35 @@ game1024 = {
             // 32 22 12 02
             // 31 21 11 01
             // 30 20 10 00
-            for (var y = 3; y >= 0; y--) {
+            for (var x = 3; x >= 0; x--) {
                 var moveToX = 3;
-                var moveToY = y;
-                for (var x = 2; x >= 0; x--) {
-                    if (this.gameBoxData[x][y] === 0) {
+                var moveToY = x;
+                for (var y = 2; y >= 0; y--) {
+                    if (this.rootData[y][x] === 0) {
                         continue;
-                    } else if (this.gameBoxData[moveToX][moveToY] === 0) {
-                        this.moveItem(x, y, moveToX, moveToY);
+                    } else if (this.rootData[moveToX][moveToY] === 0) {
+                        this.moveItem(y, x, moveToX, moveToY);
                         moveCount++;
-                    } else if (this.gameBoxData[moveToX][moveToY] !== this.gameBoxData[x][y]) {
-                        this.removePlace(moveToX, moveToY);
+                    } else if (this.rootData[moveToX][moveToY] !== this.rootData[y][x]) {
+                        this.removeEmptyYx(moveToX, moveToY);
                         moveToX--;
-                        if (!(moveToX === x && moveToY === y)) {
-                            this.moveItem(x, y, moveToX, moveToY);
+                        if (!(moveToX === y && moveToY === x)) {
+                            this.moveItem(y, x, moveToX, moveToY);
                             moveCount++;
                         }
                     } else {
-                        var doubleItem = document.querySelector('.xy' + x + y);
-                        var deleteItem = document.querySelector('.xy' + moveToX + moveToY);
-                        this.moveItem(x, y, moveToX, moveToY);
+                        var doubleItem = document.querySelector('.' + this.yxClassPrefix + y + x);
+                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + moveToX + moveToY);
+                        this.moveItem(y, x, moveToX, moveToY);
                         moveCount++;
                         removeItemList.push(deleteItem);
                         uniteItemList.push(doubleItem);
-                        this.removePlace(moveToX, moveToY);
+                        this.removeEmptyYx(moveToX, moveToY);
                         moveToX--;
                     }
                 }
-                if (this.gameBoxData[moveToX][moveToY] !== 0) {
-                    this.removePlace(moveToX, moveToY);
+                if (this.rootData[moveToX][moveToY] !== 0) {
+                    this.removeEmptyYx(moveToX, moveToY);
                 }
             }
         }
@@ -241,35 +254,35 @@ game1024 = {
             // 10 11 12 13
             // 20 21 22 23
             // 30 31 32 33
-            for (var x = 0; x < 4; x++) {
-                var moveToX = x;
+            for (var y = 0; y < 4; y++) {
+                var moveToX = y;
                 var moveToY = 0;
-                for (var y = 1; y < 4; y++) {
-                    if (this.gameBoxData[x][y] === 0) {
+                for (var x = 1; x < 4; x++) {
+                    if (this.rootData[y][x] === 0) {
                         continue;
-                    } else if (this.gameBoxData[moveToX][moveToY] === 0) {
-                        this.moveItem(x, y, moveToX, moveToY);
+                    } else if (this.rootData[moveToX][moveToY] === 0) {
+                        this.moveItem(y, x, moveToX, moveToY);
                         moveCount++;
-                    } else if (this.gameBoxData[moveToX][moveToY] !== this.gameBoxData[x][y]) {
-                        this.removePlace(moveToX, moveToY);
+                    } else if (this.rootData[moveToX][moveToY] !== this.rootData[y][x]) {
+                        this.removeEmptyYx(moveToX, moveToY);
                         moveToY++;
-                        if (!(moveToX === x && moveToY === y)) {
-                            this.moveItem(x, y, moveToX, moveToY);
+                        if (!(moveToX === y && moveToY === x)) {
+                            this.moveItem(y, x, moveToX, moveToY);
                             moveCount++;
                         }
                     } else {
-                        var doubleItem = document.querySelector('.xy' + x + y);
-                        var deleteItem = document.querySelector('.xy' + moveToX + moveToY);
-                        this.moveItem(x, y, moveToX, moveToY);
+                        var doubleItem = document.querySelector('.' + this.yxClassPrefix + y + x);
+                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + moveToX + moveToY);
+                        this.moveItem(y, x, moveToX, moveToY);
                         moveCount++;
                         removeItemList.push(deleteItem);
                         uniteItemList.push(doubleItem);
-                        this.removePlace(moveToX, moveToY);
+                        this.removeEmptyYx(moveToX, moveToY);
                         moveToY++;
                     }
                 }
-                if (this.gameBoxData[moveToX][moveToY] !== 0) {
-                    this.removePlace(moveToX, moveToY);
+                if (this.rootData[moveToX][moveToY] !== 0) {
+                    this.removeEmptyYx(moveToX, moveToY);
                 }
             }
         }
@@ -279,35 +292,35 @@ game1024 = {
             // 23 22 21 20
             // 13 12 11 10
             // 03 02 01 00
-            for (var x = 3; x >= 0; x--) {
-                var moveToX = x;
+            for (var y = 3; y >= 0; y--) {
+                var moveToX = y;
                 var moveToY = 3;
-                for (var y = 2; y >= 0; y--) {
-                    if (this.gameBoxData[x][y] === 0) {
+                for (var x = 2; x >= 0; x--) {
+                    if (this.rootData[y][x] === 0) {
                         continue;
-                    } else if (this.gameBoxData[moveToX][moveToY] === 0) {
-                        this.moveItem(x, y, moveToX, moveToY);
+                    } else if (this.rootData[moveToX][moveToY] === 0) {
+                        this.moveItem(y, x, moveToX, moveToY);
                         moveCount++;
-                    } else if (this.gameBoxData[moveToX][moveToY] !== this.gameBoxData[x][y]) {
-                        this.removePlace(moveToX, moveToY);
+                    } else if (this.rootData[moveToX][moveToY] !== this.rootData[y][x]) {
+                        this.removeEmptyYx(moveToX, moveToY);
                         moveToY--;
-                        if (!(moveToX === x && moveToY === y)) {
-                            this.moveItem(x, y, moveToX, moveToY);
+                        if (!(moveToX === y && moveToY === x)) {
+                            this.moveItem(y, x, moveToX, moveToY);
                             moveCount++;
                         }
                     } else {
-                        var doubleItem = document.querySelector('.xy' + x + y);
-                        var deleteItem = document.querySelector('.xy' + moveToX + moveToY);
-                        this.moveItem(x, y, moveToX, moveToY);
+                        var doubleItem = document.querySelector('.' + this.yxClassPrefix + y + x);
+                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + moveToX + moveToY);
+                        this.moveItem(y, x, moveToX, moveToY);
                         moveCount++;
                         removeItemList.push(deleteItem);
                         uniteItemList.push(doubleItem);
-                        this.removePlace(moveToX, moveToY);
+                        this.removeEmptyYx(moveToX, moveToY);
                         moveToY--;
                     }
                 }
-                if (this.gameBoxData[moveToX][moveToY] !== 0) {
-                    this.removePlace(moveToX, moveToY);
+                if (this.rootData[moveToX][moveToY] !== 0) {
+                    this.removeEmptyYx(moveToX, moveToY);
                 }
             }
         }
@@ -318,23 +331,23 @@ game1024 = {
                 game1024.removeElement(removeItemList);
                 game1024.addUniteAnimation(uniteItemList);
 
-                if (this.confirmVictory()) {
-                    this.youWin();
+                if (this.isVictory()) {
+                    this.onVictory();
                     return;
                 }
             }
 
             this.addNewItem();
-            if (this.emptyXyList.length === 0) {
-                if (this.confirmGameOver()) {
-                    this.gameOver();
+            if (this.emptyYxList.length === 0) {
+                if (this.isGameOver()) {
+                    this.onGameOver();
                     return;
                 }
             }
         }
 
         setTimeout(function(){
-            game1024.ready = true;
+            game1024.readyOfAction = true;
         }, this.transitionTime + 30)
 
     }

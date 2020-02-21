@@ -64,8 +64,8 @@ body {
     50% {transform: scale(1.2)}
     100% {transform: scale(1)}
 }
-/* 변화시간은 transitionTime 변수와 일치 */
-#wrap .uniteItem { animation: uniteAni 0.2s }
+/* 변화시간은 animationTime 변수와 일치 */
+#wrap .uniteItem { animation: uniteAni 0.9s }
 #wrap .invisible {
     transform: scale(0,0);
 }
@@ -119,25 +119,25 @@ div .item-num1024::before { content: '1024'; color: rgb(249, 246, 242); }
 div .item-num2048 { background-color: rgb(237, 194, 46); }
 div .item-num2048::before { content: '2048'; color: rgb(249, 246, 242); }
 
-.xy00 { top: 4%; left: 4%; }
-.xy01 { top: 4%; left: 28%; }
-.xy02 { top: 4%; left: 52%; }
-.xy03 { top: 4%; left: 76%; }
+.yx00 { top: 4%; left: 4%; }
+.yx01 { top: 4%; left: 28%; }
+.yx02 { top: 4%; left: 52%; }
+.yx03 { top: 4%; left: 76%; }
 
-.xy10 { top: 28%; left: 4%; }
-.xy11 { top: 28%; left: 28%; }
-.xy12 { top: 28%; left: 52%; }
-.xy13 { top: 28%; left: 76%; }
+.yx10 { top: 28%; left: 4%; }
+.yx11 { top: 28%; left: 28%; }
+.yx12 { top: 28%; left: 52%; }
+.yx13 { top: 28%; left: 76%; }
 
-.xy20 { top: 52%; left: 4%; }
-.xy21 { top: 52%; left: 28%; }
-.xy22 { top: 52%; left: 52%; }
-.xy23 { top: 52%; left: 76%; }
+.yx20 { top: 52%; left: 4%; }
+.yx21 { top: 52%; left: 28%; }
+.yx22 { top: 52%; left: 52%; }
+.yx23 { top: 52%; left: 76%; }
 
-.xy30 { top: 76%; left: 4%; }
-.xy31 { top: 76%; left: 28%; }
-.xy32 { top: 76%; left: 52%; }
-.xy33 { top: 76%; left: 76%; }
+.yx30 { top: 76%; left: 4%; }
+.yx31 { top: 76%; left: 28%; }
+.yx32 { top: 76%; left: 52%; }
+.yx33 { top: 76%; left: 76%; }
 
 
 @media (max-width: 800px) {
