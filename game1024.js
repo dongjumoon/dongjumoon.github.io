@@ -17,8 +17,8 @@ game1024 = {
     animationTime: 900,
     root: undefined,
     readyOfAction: false,
-    gameBaseColumnCount: 4,
-    gameBaseRowCount: 4,
+    rootColumn: 4,
+    rootRow: 4,
     startNumber: 2, //2의 n 승 숫자만 가능(디자인 관련문제).
     goalNumber: Math.pow(2, 10), // startNumber 의 10승
     numberClassPrefix: 'item-num',
@@ -28,7 +28,7 @@ game1024 = {
         this.root = root;
         this.root.innerHTML = "";
         // 4*4 게임판 배경 생성
-        for (var i = 0; i < this.gameBaseColumnCount * this.gameBaseRowCount; i++) {
+        for (var i = 0; i < this.rootColumn * this.rootRow; i++) {
             var li = document.createElement('li');
             li.className = 'item-base';
             this.root.insertAdjacentElement('afterbegin', li);
@@ -45,10 +45,10 @@ game1024 = {
         var newNum = this.getNewNumber();
         var newYx = this.randomChoice(this.emptyYxList);
         var item = document.createElement('div');
-        item.className = this.numberClassPrefix + newNum + ' ' + this.yxClassPrefix + newYx + ' invisible';
+        item.className = this.getNumberClassName(newNum) + ' ' + this.getYxClassName(newYx) + ' invisible';
         this.root.insertAdjacentElement('beforeend', item);
         setTimeout(function(){
-            item.className = this.numberClassPrefix + newNum + ' ' + this.yxClassPrefix + newYx;
+            item.className = this.getNumberClassName(newNum) + ' ' + this.getYxClassName(newYx);
         }, this.transitionTime / 2);
 
         var y = newYx.charAt(0);
@@ -65,14 +65,14 @@ game1024 = {
         return Math.random() < 0.8 ? this.startNumber : this.startNumber + this.startNumber;
     },
     isGameOver: function() {
-        for (var y = 0; y < this.gameBaseRowCount; y++) {
-            for (var x = 0; x < this.gameBaseColumnCount - 1; x++) {
+        for (var y = 0; y < this.rootRow; y++) {
+            for (var x = 0; x < this.rootColumn - 1; x++) {
                 if (this.rootData[y][x] === this.rootData[y][x+1])
                     return false;
             }
         }
-        for (var y = 0; y < this.gameBaseRowCount - 1; y++) {
-            for (var x = 0; x < this.gameBaseColumnCount; x++) {
+        for (var y = 0; y < this.rootRow - 1; y++) {
+            for (var x = 0; x < this.rootColumn; x++) {
                 if (this.rootData[y][x] === this.rootData[y+1][x])
                     return false;
             }
@@ -106,46 +106,62 @@ game1024 = {
             this.emptyYxList.splice(removeIndex, 1);
         }
     },
-    removeElement: function(elements) {
+    removeNumber: function(item) {
         setTimeout(function() {
-            for (var i = 0; i < elements.length; i++) {
-                elements[i].parentNode.removeChild(elements[i]);
-            }
+            item.parentNode.removeChild(item);
         }, this.transitionTime)
     },
-    addUniteAnimation: function(elements) {
-        for (var i = 0; i < elements.length; i++) {
-            var yx = this.getYx(elements[i]);
-            var y = yx.charAt(0);
-            var x = yx.charAt(1);
+    doubleNumber: function(item) {
+        var yx = this.getYx(item);
+        var y = yx.charAt(0);
+        var x = yx.charAt(1);
 
-            this.rootData[y][x] *= 2;
-        }
+        this.rootData[y][x] *= 2;
         setTimeout(function() {
-            for (var i = 0; i < elements.length; i++) {
-                var yx = game1024.getYx(elements[i]);
+            for (var i = 0; i < item.length; i++) {
+                var yx = game1024.getYx(item[i]);
                 var y = yx.charAt(0);
                 var x = yx.charAt(1);
 
-                elements[i].className = this.numberClassPrefix + game1024.rootData[y][x] + ' ' + this.yxClassPrefix + yx;
-                elements[i].classList.add('uniteItem');
+                item[i].className = this.getNumberClassName(game1024.rootData[y][x]) + ' ' + this.getYxClassName(yx);
+                item[i].classList.add('uniteItem');
             }
             setTimeout(function() {
-                for (var i = 0; i < elements.length; i ++) {
-                    elements[i].classList.remove('uniteItem');
+                for (var i = 0; i < item.length; i ++) {
+                    item[i].classList.remove('uniteItem');
                 }
             }, game1024.animationTime);
         }, this.transitionTime)
     },
+    onDoubleAnimation: function(item) {
+        // TODO;
+    },
+    getYxClassName: function(yx) {
+        return this.yxClassPrefix + yx;
+    },
+    getRootData: function() {
+        // TODO;
+    },
+    getY: function(item) {
+        var clsName = item.className;
+        return clsName.substr(clsName.indexOf(this.yxClassPrefix) + this.yxClassPrefix.length, 1);
+    },
+    getX: function(item) {
+        var clsName = item.className;
+        return clsName.substr(clsName.indexOf(this.yxClassPrefix) + this.yxClassPrefix.length + 1, 1);
+    },
+    getNumberClassName: function(number) {
+        return this.numberClassPrefix + number;
+    },
     moveItem: function(fromY, fromX, toY, toX) {
-        var Item = document.querySelector('.' + this.yxClassPrefix + fromY + fromX);
-        Item.classList.add(this.yxClassPrefix + toY + toX);
-        Item.classList.remove(this.yxClassPrefix + fromY + fromX);
+        var Item = document.querySelector('.' + this.getYxClassName('' + fromY + fromX));
+        Item.classList.add(this.getYxClassName('' + toY + toX));
+        Item.classList.remove(this.getYxClassName('' + fromY + fromX));
         this.rootData[toY][toX] = this.rootData[fromY][fromX];
         this.rootData[fromY][fromX] = 0;
     },
-    getYx: function(element) {
-        var clsName = element.className;
+    getYx: function(item) {
+        var clsName = item.className;
         return clsName.substr(clsName.indexOf(this.yxClassPrefix) + this.yxClassPrefix.length, 2);
     },
 
@@ -328,8 +344,8 @@ game1024 = {
 
         if (moveCount > 0) {
             if (removeItemList.length > 0) {
-                game1024.removeElement(removeItemList);
-                game1024.addUniteAnimation(uniteItemList);
+                game1024.removeNumber(removeItemList);
+                game1024.doubleNumber(uniteItemList);
 
                 if (this.isVictory()) {
                     this.onVictory();
