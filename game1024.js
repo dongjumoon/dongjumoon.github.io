@@ -1,24 +1,14 @@
 document.body.style.height = window.innerHeight + 'px';
 
 game1024 = {
-    emptyYxList: [
-        '00', '01', '02', '03',
-        '10', '11', '12', '13',
-        '20', '21', '22', '23',
-        '30', '31', '32', '33'
-    ],
-    rootData: [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0]
-    ],
+    emptyYxList: undefined,
+    rootData: undefined,
     transitionTime: 200,
-    animationTime: 900,
+    animationTime: 300,
     root: undefined,
     readyOfAction: false,
-    rootColumn: 4,
-    rootRow: 4,
+    rootColumn: 8,
+    rootRow: 8,
     startNumber: 2, //2의 n 승 숫자만 가능(디자인 관련문제).
     goalNumber: Math.pow(2, 10), // startNumber 의 10승
     numberClassPrefix: 'item-num',
@@ -33,6 +23,17 @@ game1024 = {
             li.className = 'item-base';
             this.root.insertAdjacentElement('afterbegin', li);
         }
+        var rootData = [];
+        for (var y = 0; y < this.rootRow; y++) {
+            var arr = [];
+            for (var x = 0; x < this.rootColumn; x++) {
+                arr.push(0);
+            }
+            rootData.push(arr);
+        }
+        this.rootData = rootData;
+
+        this.resetEmptyYxList();
 
         var div = document.createElement('div');
         div.className = 'game-over-screen';
@@ -48,7 +49,7 @@ game1024 = {
         item.className = this.getNumberClassName(newNum) + ' ' + this.getYxClassName(newYx) + ' invisible';
         this.root.insertAdjacentElement('beforeend', item);
         setTimeout(function(){
-            item.className = this.getNumberClassName(newNum) + ' ' + this.getYxClassName(newYx);
+            item.className = game1024.getNumberClassName(newNum) + ' ' + game1024.getYxClassName(newYx);
         }, this.transitionTime / 2);
 
         var y = newYx.charAt(0);
@@ -117,24 +118,25 @@ game1024 = {
         var x = yx.charAt(1);
 
         this.rootData[y][x] *= 2;
-        setTimeout(function() {
-            for (var i = 0; i < item.length; i++) {
-                var yx = game1024.getYx(item[i]);
-                var y = yx.charAt(0);
-                var x = yx.charAt(1);
 
-                item[i].className = this.getNumberClassName(game1024.rootData[y][x]) + ' ' + this.getYxClassName(yx);
-                item[i].classList.add('uniteItem');
-            }
-            setTimeout(function() {
-                for (var i = 0; i < item.length; i ++) {
-                    item[i].classList.remove('uniteItem');
-                }
-            }, game1024.animationTime);
-        }, this.transitionTime)
+        setTimeout(function() {
+            game1024.onDoubleAnimation(yx);
+        }, this.transitionTime);
     },
-    onDoubleAnimation: function(item) {
-        // TODO;
+    onDoubleAnimation: function(yx) {
+        var item = this.getItem(yx);
+        var y = yx.charAt(0);
+        var x = yx.charAt(1);
+
+        item.className = game1024.getNumberClassName(game1024.rootData[y][x]) + ' ' + game1024.getYxClassName(yx);
+        item.classList.add('uniteItem');
+
+        setTimeout(function() {
+                item.classList.remove('uniteItem');
+        }, this.animationTime);
+    },
+    getItem: function(yx) {
+        return document.querySelector('.' + this.getYxClassName(yx));
     },
     getYxClassName: function(yx) {
         return this.yxClassPrefix + yx;
@@ -164,7 +166,17 @@ game1024 = {
         var clsName = item.className;
         return clsName.substr(clsName.indexOf(this.yxClassPrefix) + this.yxClassPrefix.length, 2);
     },
+    resetEmptyYxList: function() {
+        var arr = [];
 
+        for (var y = 0; y < this.rootRow; y++) {
+            for (var x = 0; x < this.rootColumn; x++) {
+                arr.push('' + y + x);
+            }
+        }
+
+        this.emptyYxList = arr;
+    },
     action: function(way) {
         if (this.readyOfAction === false)
             return;
@@ -178,15 +190,8 @@ game1024 = {
         }
         operation[way] = true;
 
-        this.emptyYxList = [
-            '00', '01', '02', '03',
-            '10', '11', '12', '13',
-            '20', '21', '22', '23',
-            '30', '31', '32', '33'
-        ];
+        this.resetEmptyYxList();
         var moveCount = 0;
-        var removeItemList = [];
-        var uniteItemList = [];
 
 
         if(operation.up) { // 상
@@ -194,163 +199,161 @@ game1024 = {
             // 01 11 21 31
             // 02 12 22 32
             // 03 13 23 33
-            for (var x = 0; x < 4; x++) {
-                var moveToX = 0;
-                var moveToY = x;
-                for (var y = 1; y < 4; y++) {
+            for (var x = 0; x < this.rootRow; x++) {
+                var xToMove = 0;
+                var yToMove = x;
+                for (var y = 1; y < this.rootColumn; y++) {
                     if (this.rootData[y][x] === 0) {
                         continue;
-                    } else if (this.rootData[moveToX][moveToY] === 0) {
-                        this.moveItem(y, x, moveToX, moveToY);
+                    } else if (this.rootData[xToMove][yToMove] === 0) {
+                        this.moveItem(y, x, xToMove, yToMove);
                         moveCount++;
-                    } else if (this.rootData[moveToX][moveToY] !== this.rootData[y][x]) {
-                        this.removeEmptyYx(moveToX, moveToY);
-                        moveToX++;
-                        if (!(moveToX === y && moveToY === x)) {
-                            this.moveItem(y, x, moveToX, moveToY);
+                    } else if (this.rootData[xToMove][yToMove] !== this.rootData[y][x]) {
+                        this.removeEmptyYx(xToMove, yToMove);
+                        xToMove++;
+                        if (!(xToMove === y && yToMove === x)) {
+                            this.moveItem(y, x, xToMove, yToMove);
                             moveCount++;
                         }
                     } else {
                         var doubleItem = document.querySelector('.' + this.yxClassPrefix + y + x);
-                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + moveToX + moveToY);
-                        this.moveItem(y, x, moveToX, moveToY);
+                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + xToMove + yToMove);
+                        this.moveItem(y, x, xToMove, yToMove);
                         moveCount++;
-                        removeItemList.push(deleteItem);
-                        uniteItemList.push(doubleItem);
-                        this.removeEmptyYx(moveToX, moveToY);
-                        moveToX++;
+                        this.removeNumber(deleteItem);
+                        this.doubleNumber(doubleItem);
+                        this.removeEmptyYx(xToMove, yToMove);
+                        xToMove++;
                     }
                 }
-                if (this.rootData[moveToX][moveToY] !== 0) {
-                    this.removeEmptyYx(moveToX, moveToY);
+                if (this.rootData[xToMove][yToMove] !== 0) {
+                    this.removeEmptyYx(xToMove, yToMove);
                 }
             }
         }
 
-        if(operation.down) { // 하
+        else if(operation.down) { // 하
             // 33 23 13 03
             // 32 22 12 02
             // 31 21 11 01
             // 30 20 10 00
-            for (var x = 3; x >= 0; x--) {
-                var moveToX = 3;
-                var moveToY = x;
-                for (var y = 2; y >= 0; y--) {
+            for (var x = this.rootColumn - 1; x >= 0; x--) {
+                var xToMove = this.rootColumn - 1;
+                var yToMove = x;
+                for (var y = this.rootRow - 2; y >= 0; y--) {
                     if (this.rootData[y][x] === 0) {
                         continue;
-                    } else if (this.rootData[moveToX][moveToY] === 0) {
-                        this.moveItem(y, x, moveToX, moveToY);
+                    } else if (this.rootData[xToMove][yToMove] === 0) {
+                        this.moveItem(y, x, xToMove, yToMove);
                         moveCount++;
-                    } else if (this.rootData[moveToX][moveToY] !== this.rootData[y][x]) {
-                        this.removeEmptyYx(moveToX, moveToY);
-                        moveToX--;
-                        if (!(moveToX === y && moveToY === x)) {
-                            this.moveItem(y, x, moveToX, moveToY);
+                    } else if (this.rootData[xToMove][yToMove] !== this.rootData[y][x]) {
+                        this.removeEmptyYx(xToMove, yToMove);
+                        xToMove--;
+                        if (!(xToMove === y && yToMove === x)) {
+                            this.moveItem(y, x, xToMove, yToMove);
                             moveCount++;
                         }
                     } else {
                         var doubleItem = document.querySelector('.' + this.yxClassPrefix + y + x);
-                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + moveToX + moveToY);
-                        this.moveItem(y, x, moveToX, moveToY);
+                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + xToMove + yToMove);
+                        this.moveItem(y, x, xToMove, yToMove);
                         moveCount++;
-                        removeItemList.push(deleteItem);
-                        uniteItemList.push(doubleItem);
-                        this.removeEmptyYx(moveToX, moveToY);
-                        moveToX--;
+                        this.removeNumber(deleteItem);
+                        this.doubleNumber(doubleItem);
+                        this.removeEmptyYx(xToMove, yToMove);
+                        xToMove--;
                     }
                 }
-                if (this.rootData[moveToX][moveToY] !== 0) {
-                    this.removeEmptyYx(moveToX, moveToY);
+                if (this.rootData[xToMove][yToMove] !== 0) {
+                    this.removeEmptyYx(xToMove, yToMove);
                 }
             }
         }
 
-        if(operation.left) { // 좌
+        else if(operation.left) { // 좌
             // 00 01 02 03
             // 10 11 12 13
             // 20 21 22 23
             // 30 31 32 33
-            for (var y = 0; y < 4; y++) {
-                var moveToX = y;
-                var moveToY = 0;
-                for (var x = 1; x < 4; x++) {
+            for (var y = 0; y < this.rootRow; y++) {
+                var xToMove = y;
+                var yToMove = 0;
+                for (var x = 1; x < this.rootColumn; x++) {
                     if (this.rootData[y][x] === 0) {
                         continue;
-                    } else if (this.rootData[moveToX][moveToY] === 0) {
-                        this.moveItem(y, x, moveToX, moveToY);
+                    } else if (this.rootData[xToMove][yToMove] === 0) {
+                        this.moveItem(y, x, xToMove, yToMove);
                         moveCount++;
-                    } else if (this.rootData[moveToX][moveToY] !== this.rootData[y][x]) {
-                        this.removeEmptyYx(moveToX, moveToY);
-                        moveToY++;
-                        if (!(moveToX === y && moveToY === x)) {
-                            this.moveItem(y, x, moveToX, moveToY);
+                    } else if (this.rootData[xToMove][yToMove] !== this.rootData[y][x]) {
+                        this.removeEmptyYx(xToMove, yToMove);
+                        yToMove++;
+                        if (!(xToMove === y && yToMove === x)) {
+                            this.moveItem(y, x, xToMove, yToMove);
                             moveCount++;
                         }
                     } else {
                         var doubleItem = document.querySelector('.' + this.yxClassPrefix + y + x);
-                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + moveToX + moveToY);
-                        this.moveItem(y, x, moveToX, moveToY);
+                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + xToMove + yToMove);
+                        this.moveItem(y, x, xToMove, yToMove);
                         moveCount++;
-                        removeItemList.push(deleteItem);
-                        uniteItemList.push(doubleItem);
-                        this.removeEmptyYx(moveToX, moveToY);
-                        moveToY++;
+                        this.removeNumber(deleteItem);
+                        this.doubleNumber(doubleItem);
+                        this.removeEmptyYx(xToMove, yToMove);
+                        yToMove++;
                     }
                 }
-                if (this.rootData[moveToX][moveToY] !== 0) {
-                    this.removeEmptyYx(moveToX, moveToY);
+                if (this.rootData[xToMove][yToMove] !== 0) {
+                    this.removeEmptyYx(xToMove, yToMove);
                 }
             }
         }
 
-        if(operation.right) { // 우
+        else if(operation.right) { // 우
             // 33 32 31 30
             // 23 22 21 20
             // 13 12 11 10
             // 03 02 01 00
-            for (var y = 3; y >= 0; y--) {
-                var moveToX = y;
-                var moveToY = 3;
-                for (var x = 2; x >= 0; x--) {
+            for (var y = this.rootRow - 1; y >= 0; y--) {
+                var xToMove = y;
+                var yToMove = this.rootRow - 1;
+                for (var x = this.rootColumn - 2; x >= 0; x--) {
                     if (this.rootData[y][x] === 0) {
                         continue;
-                    } else if (this.rootData[moveToX][moveToY] === 0) {
-                        this.moveItem(y, x, moveToX, moveToY);
+                    } else if (this.rootData[xToMove][yToMove] === 0) {
+                        this.moveItem(y, x, xToMove, yToMove);
                         moveCount++;
-                    } else if (this.rootData[moveToX][moveToY] !== this.rootData[y][x]) {
-                        this.removeEmptyYx(moveToX, moveToY);
-                        moveToY--;
-                        if (!(moveToX === y && moveToY === x)) {
-                            this.moveItem(y, x, moveToX, moveToY);
+                    } else if (this.rootData[xToMove][yToMove] !== this.rootData[y][x]) {
+                        this.removeEmptyYx(xToMove, yToMove);
+                        yToMove--;
+                        if (!(xToMove === y && yToMove === x)) {
+                            this.moveItem(y, x, xToMove, yToMove);
                             moveCount++;
                         }
                     } else {
                         var doubleItem = document.querySelector('.' + this.yxClassPrefix + y + x);
-                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + moveToX + moveToY);
-                        this.moveItem(y, x, moveToX, moveToY);
+                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + xToMove + yToMove);
+                        this.moveItem(y, x, xToMove, yToMove);
                         moveCount++;
-                        removeItemList.push(deleteItem);
-                        uniteItemList.push(doubleItem);
-                        this.removeEmptyYx(moveToX, moveToY);
-                        moveToY--;
+                        this.removeNumber(deleteItem);
+                        this.doubleNumber(doubleItem);
+                        this.removeEmptyYx(xToMove, yToMove);
+                        yToMove--;
                     }
                 }
-                if (this.rootData[moveToX][moveToY] !== 0) {
-                    this.removeEmptyYx(moveToX, moveToY);
+                if (this.rootData[xToMove][yToMove] !== 0) {
+                    this.removeEmptyYx(xToMove, yToMove);
                 }
             }
+        } else {
+            alert('잘못된 입력입니다.');
+            return;
         }
 
 
         if (moveCount > 0) {
-            if (removeItemList.length > 0) {
-                game1024.removeNumber(removeItemList);
-                game1024.doubleNumber(uniteItemList);
-
-                if (this.isVictory()) {
-                    this.onVictory();
-                    return;
-                }
+            if (this.isVictory()) {
+                this.onVictory();
+                return;
             }
 
             this.addNewItem();
@@ -364,7 +367,7 @@ game1024 = {
 
         setTimeout(function(){
             game1024.readyOfAction = true;
-        }, this.transitionTime + 30)
+        }, this.transitionTime)
 
     }
 }
