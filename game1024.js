@@ -180,7 +180,6 @@ game1024 = {
     action: function(way) {
         if (this.readyOfAction === false)
             return;
-        this.readyOfAction = false;
 
         var operation = {
             up: false,
@@ -190,158 +189,104 @@ game1024 = {
         }
         operation[way] = true;
 
-        this.resetEmptyYxList();
-        var moveCount = 0;
+        if(operation.up  || operation.down || operation.left || operation.right) {
+            this.readyOfAction = false;
 
+            this.resetEmptyYxList();
+            var moveCount = 0;
 
-        if(operation.up) { // 상
-            // 00 10 20 30
-            // 01 11 21 31
-            // 02 12 22 32
-            // 03 13 23 33
-            for (var x = 0; x < this.rootRow; x++) {
-                var xToMove = 0;
-                var yToMove = x;
-                for (var y = 1; y < this.rootColumn; y++) {
+            var y = 0;
+            var x = 0;
+            var yToMove;
+            var xToMove;
+            var condition = true;
+
+            while (condition) {
+                if (operation.up) {
+                    y = 1;
+                    yToMove = 0;
+                    xToMove = x;
+                }
+                else if (operation.down) {
+                    y = this.rootRow - 2;
+                    yToMove = this.rootRow - 1;
+                    xToMove = x;
+                }
+                else if (operation.left) {
+                    x = 1;
+                    yToMove = y;
+                    xToMove = 0;
+                }
+                else {
+                    x = this.rootColumn - 2;
+                    yToMove = y;
+                    xToMove = this.rootColumn - 1;
+                }
+                while (condition) {
                     if (this.rootData[y][x] === 0) {
-                        continue;
-                    } else if (this.rootData[xToMove][yToMove] === 0) {
-                        this.moveItem(y, x, xToMove, yToMove);
+
+                    } else if (this.rootData[yToMove][xToMove] === 0) {
+                        this.moveItem(y, x, yToMove, xToMove);
                         moveCount++;
-                    } else if (this.rootData[xToMove][yToMove] !== this.rootData[y][x]) {
-                        this.removeEmptyYx(xToMove, yToMove);
-                        xToMove++;
-                        if (!(xToMove === y && yToMove === x)) {
-                            this.moveItem(y, x, xToMove, yToMove);
+                    } else if (this.rootData[yToMove][xToMove] !== this.rootData[y][x]) {
+                        this.removeEmptyYx(yToMove, xToMove);
+
+                        if (operation.up)
+                            yToMove++;
+                        else if (operation.down)
+                            yToMove--;
+                        else if (operation.left)
+                            xToMove++;
+                        else
+                            xToMove--;
+
+                        if (!(yToMove === y && xToMove === x)) {
+                            this.moveItem(y, x, yToMove, xToMove);
                             moveCount++;
                         }
                     } else {
                         var doubleItem = document.querySelector('.' + this.yxClassPrefix + y + x);
-                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + xToMove + yToMove);
-                        this.moveItem(y, x, xToMove, yToMove);
+                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + yToMove + xToMove);
+                        this.moveItem(y, x, yToMove, xToMove);
                         moveCount++;
                         this.removeNumber(deleteItem);
                         this.doubleNumber(doubleItem);
-                        this.removeEmptyYx(xToMove, yToMove);
-                        xToMove++;
-                    }
-                }
-                if (this.rootData[xToMove][yToMove] !== 0) {
-                    this.removeEmptyYx(xToMove, yToMove);
-                }
-            }
-        }
+                        this.removeEmptyYx(yToMove, xToMove);
 
-        else if(operation.down) { // 하
-            // 33 23 13 03
-            // 32 22 12 02
-            // 31 21 11 01
-            // 30 20 10 00
-            for (var x = this.rootColumn - 1; x >= 0; x--) {
-                var xToMove = this.rootColumn - 1;
-                var yToMove = x;
-                for (var y = this.rootRow - 2; y >= 0; y--) {
-                    if (this.rootData[y][x] === 0) {
-                        continue;
-                    } else if (this.rootData[xToMove][yToMove] === 0) {
-                        this.moveItem(y, x, xToMove, yToMove);
-                        moveCount++;
-                    } else if (this.rootData[xToMove][yToMove] !== this.rootData[y][x]) {
-                        this.removeEmptyYx(xToMove, yToMove);
-                        xToMove--;
-                        if (!(xToMove === y && yToMove === x)) {
-                            this.moveItem(y, x, xToMove, yToMove);
-                            moveCount++;
-                        }
-                    } else {
-                        var doubleItem = document.querySelector('.' + this.yxClassPrefix + y + x);
-                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + xToMove + yToMove);
-                        this.moveItem(y, x, xToMove, yToMove);
-                        moveCount++;
-                        this.removeNumber(deleteItem);
-                        this.doubleNumber(doubleItem);
-                        this.removeEmptyYx(xToMove, yToMove);
-                        xToMove--;
+                        if (operation.up)
+                            yToMove++;
+                        else if (operation.down)
+                            yToMove--;
+                        else if (operation.left)
+                            xToMove++;
+                        else
+                            xToMove--;
                     }
-                }
-                if (this.rootData[xToMove][yToMove] !== 0) {
-                    this.removeEmptyYx(xToMove, yToMove);
-                }
-            }
-        }
 
-        else if(operation.left) { // 좌
-            // 00 01 02 03
-            // 10 11 12 13
-            // 20 21 22 23
-            // 30 31 32 33
-            for (var y = 0; y < this.rootRow; y++) {
-                var xToMove = y;
-                var yToMove = 0;
-                for (var x = 1; x < this.rootColumn; x++) {
-                    if (this.rootData[y][x] === 0) {
-                        continue;
-                    } else if (this.rootData[xToMove][yToMove] === 0) {
-                        this.moveItem(y, x, xToMove, yToMove);
-                        moveCount++;
-                    } else if (this.rootData[xToMove][yToMove] !== this.rootData[y][x]) {
-                        this.removeEmptyYx(xToMove, yToMove);
-                        yToMove++;
-                        if (!(xToMove === y && yToMove === x)) {
-                            this.moveItem(y, x, xToMove, yToMove);
-                            moveCount++;
-                        }
+                    if (operation.up) {
+                        y++;
+                        condition = y < this.rootRow;
+                    } else if (operation.down) {
+                        y--;
+                        condition = y >= 0;
+                    } else if (operation.left) {
+                        x++;
+                        condition = x < this.rootColumn;
                     } else {
-                        var doubleItem = document.querySelector('.' + this.yxClassPrefix + y + x);
-                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + xToMove + yToMove);
-                        this.moveItem(y, x, xToMove, yToMove);
-                        moveCount++;
-                        this.removeNumber(deleteItem);
-                        this.doubleNumber(doubleItem);
-                        this.removeEmptyYx(xToMove, yToMove);
-                        yToMove++;
+                        x--;
+                        condition = x >= 0;
                     }
                 }
-                if (this.rootData[xToMove][yToMove] !== 0) {
-                    this.removeEmptyYx(xToMove, yToMove);
+                if (this.rootData[yToMove][xToMove] !== 0) {
+                    this.removeEmptyYx(yToMove, xToMove);
                 }
-            }
-        }
 
-        else if(operation.right) { // 우
-            // 33 32 31 30
-            // 23 22 21 20
-            // 13 12 11 10
-            // 03 02 01 00
-            for (var y = this.rootRow - 1; y >= 0; y--) {
-                var xToMove = y;
-                var yToMove = this.rootRow - 1;
-                for (var x = this.rootColumn - 2; x >= 0; x--) {
-                    if (this.rootData[y][x] === 0) {
-                        continue;
-                    } else if (this.rootData[xToMove][yToMove] === 0) {
-                        this.moveItem(y, x, xToMove, yToMove);
-                        moveCount++;
-                    } else if (this.rootData[xToMove][yToMove] !== this.rootData[y][x]) {
-                        this.removeEmptyYx(xToMove, yToMove);
-                        yToMove--;
-                        if (!(xToMove === y && yToMove === x)) {
-                            this.moveItem(y, x, xToMove, yToMove);
-                            moveCount++;
-                        }
-                    } else {
-                        var doubleItem = document.querySelector('.' + this.yxClassPrefix + y + x);
-                        var deleteItem = document.querySelector('.' + this.yxClassPrefix + xToMove + yToMove);
-                        this.moveItem(y, x, xToMove, yToMove);
-                        moveCount++;
-                        this.removeNumber(deleteItem);
-                        this.doubleNumber(doubleItem);
-                        this.removeEmptyYx(xToMove, yToMove);
-                        yToMove--;
-                    }
-                }
-                if (this.rootData[xToMove][yToMove] !== 0) {
-                    this.removeEmptyYx(xToMove, yToMove);
+                if (operation.up || operation.down) {
+                    x++;
+                    condition = x < this.rootColumn;
+                } else {
+                    y++;
+                    condition = y < this.rootRow;
                 }
             }
         } else {
