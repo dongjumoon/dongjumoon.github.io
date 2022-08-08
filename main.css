@@ -47,33 +47,33 @@ body {
     font-family: 'Changa One', cursive;
     font-size: 45px;
     color: rgb(119, 110, 101);
-        white-space: nowrap;
-    }
+    white-space: nowrap;
+}
 
-    .item-base {
-        width: calc(80% / 8);
-        height: calc(80% / 8);
-        border-radius: 3px;
-        margin: calc(20% / 9) 0 0 calc(20% / 9);
-        background-color: rgb(205, 193, 180);
-        float: left;
-    }
+.item-base {
+    width: 20%;
+    height: 20%;
+    border-radius: 3px;
+    margin: 4% 0 0 4%;
+    background-color: rgb(205, 193, 180);
+    float: left;
+}
 
-    @keyframes uniteAni {
-        0% {transform: scale(1)}
-        50% {transform: scale(1.2)}
-        100% {transform: scale(1)}
-    }
-    /* 변화시간은 animationTime 변수와 일치 */
-    #wrap .uniteItem { animation: uniteAni 0.3s }
-    #wrap .invisible {
-        transform: scale(0,0);
-    }
-    div[class^=item-num] {
-        border-radius: 3px;
+@keyframes uniteAni {
+    0% {transform: scale(1)}
+    50% {transform: scale(1.2)}
+    100% {transform: scale(1)}
+}
+/* 변화시간은 animationTime 변수와 일치 */
+#wrap .uniteItem { animation: uniteAni 0.3s }
+#wrap .invisible {
+    transform: scale(0,0);
+}
+div[class^=item-num] {
+    border-radius: 3px;
     position: absolute;
-    width: 10%;
-    height: 10%;
+    width: 20%;
+    height: 20%;
     /* 변화시간은 transitionTime 변수와 일치 */
     transition: all 0.2s;
 }
@@ -119,77 +119,26 @@ div .item-num1024::before { content: '1024'; color: rgb(249, 246, 242); }
 div .item-num2048 { background-color: rgb(237, 194, 46); }
 div .item-num2048::before { content: '2048'; color: rgb(249, 246, 242); }
 
-.yx00 { top: calc(20% / 9 * 1); left: calc(20% / 9 * 1); }
-.yx01 { top: calc(20% / 9 * 1); left: calc((20% / 9 * 2) + (80% / 8 * 1)); }
-.yx02 { top: calc(20% / 9 * 1); left: calc((20% / 9 * 3) + (80% / 8 * 2)); }
-.yx03 { top: calc(20% / 9 * 1); left: calc((20% / 9 * 4) + (80% / 8 * 3)); }
-.yx04 { top: calc(20% / 9 * 1); left: calc((20% / 9 * 5) + (80% / 8 * 4)); }
-.yx05 { top: calc(20% / 9 * 1); left: calc((20% / 9 * 6) + (80% / 8 * 5)); }
-.yx06 { top: calc(20% / 9 * 1); left: calc((20% / 9 * 7) + (80% / 8 * 6)); }
-.yx07 { top: calc(20% / 9 * 1); left: calc((20% / 9 * 8) + (80% / 8 * 7)); }
+.yx00 { top: 4%; left: 4%; }
+.yx01 { top: 4%; left: 28%; }
+.yx02 { top: 4%; left: 52%; }
+.yx03 { top: 4%; left: 76%; }
 
-.yx10 { top: calc((20% / 9 * 2) + (80% / 8 * 1)); left: calc(20% / 9 * 1); }
-.yx11 { top: calc((20% / 9 * 2) + (80% / 8 * 1)); left: calc((20% / 9 * 2) + (80% / 8 * 1)); }
-.yx12 { top: calc((20% / 9 * 2) + (80% / 8 * 1)); left: calc((20% / 9 * 3) + (80% / 8 * 2)); }
-.yx13 { top: calc((20% / 9 * 2) + (80% / 8 * 1)); left: calc((20% / 9 * 4) + (80% / 8 * 3)); }
-.yx14 { top: calc((20% / 9 * 2) + (80% / 8 * 1)); left: calc((20% / 9 * 5) + (80% / 8 * 4)); }
-.yx15 { top: calc((20% / 9 * 2) + (80% / 8 * 1)); left: calc((20% / 9 * 6) + (80% / 8 * 5)); }
-.yx16 { top: calc((20% / 9 * 2) + (80% / 8 * 1)); left: calc((20% / 9 * 7) + (80% / 8 * 6)); }
-.yx17 { top: calc((20% / 9 * 2) + (80% / 8 * 1)); left: calc((20% / 9 * 8) + (80% / 8 * 7)); }
+.yx10 { top: 28%; left: 4%; }
+.yx11 { top: 28%; left: 28%; }
+.yx12 { top: 28%; left: 52%; }
+.yx13 { top: 28%; left: 76%; }
 
-.yx20 { top: calc((20% / 9 * 3) + (80% / 8 * 2)); left: calc(20% / 9 * 1); }
-.yx21 { top: calc((20% / 9 * 3) + (80% / 8 * 2)); left: calc((20% / 9 * 2) + (80% / 8 * 1)); }
-.yx22 { top: calc((20% / 9 * 3) + (80% / 8 * 2)); left: calc((20% / 9 * 3) + (80% / 8 * 2)); }
-.yx23 { top: calc((20% / 9 * 3) + (80% / 8 * 2)); left: calc((20% / 9 * 4) + (80% / 8 * 3)); }
-.yx24 { top: calc((20% / 9 * 3) + (80% / 8 * 2)); left: calc((20% / 9 * 5) + (80% / 8 * 4)); }
-.yx25 { top: calc((20% / 9 * 3) + (80% / 8 * 2)); left: calc((20% / 9 * 6) + (80% / 8 * 5)); }
-.yx26 { top: calc((20% / 9 * 3) + (80% / 8 * 2)); left: calc((20% / 9 * 7) + (80% / 8 * 6)); }
-.yx27 { top: calc((20% / 9 * 3) + (80% / 8 * 2)); left: calc((20% / 9 * 8) + (80% / 8 * 7)); }
+.yx20 { top: 52%; left: 4%; }
+.yx21 { top: 52%; left: 28%; }
+.yx22 { top: 52%; left: 52%; }
+.yx23 { top: 52%; left: 76%; }
 
-.yx30 { top: calc((20% / 9 * 4) + (80% / 8 * 3)); left: calc(20% / 9 * 1); }
-.yx31 { top: calc((20% / 9 * 4) + (80% / 8 * 3)); left: calc((20% / 9 * 2) + (80% / 8 * 1)); }
-.yx32 { top: calc((20% / 9 * 4) + (80% / 8 * 3)); left: calc((20% / 9 * 3) + (80% / 8 * 2)); }
-.yx33 { top: calc((20% / 9 * 4) + (80% / 8 * 3)); left: calc((20% / 9 * 4) + (80% / 8 * 3)); }
-.yx34 { top: calc((20% / 9 * 4) + (80% / 8 * 3)); left: calc((20% / 9 * 5) + (80% / 8 * 4)); }
-.yx35 { top: calc((20% / 9 * 4) + (80% / 8 * 3)); left: calc((20% / 9 * 6) + (80% / 8 * 5)); }
-.yx36 { top: calc((20% / 9 * 4) + (80% / 8 * 3)); left: calc((20% / 9 * 7) + (80% / 8 * 6)); }
-.yx37 { top: calc((20% / 9 * 4) + (80% / 8 * 3)); left: calc((20% / 9 * 8) + (80% / 8 * 7)); }
+.yx30 { top: 76%; left: 4%; }
+.yx31 { top: 76%; left: 28%; }
+.yx32 { top: 76%; left: 52%; }
+.yx33 { top: 76%; left: 76%; }
 
-.yx40 { top: calc((20% / 9 * 5) + (80% / 8 * 4)); left: calc(20% / 9 * 1); }
-.yx41 { top: calc((20% / 9 * 5) + (80% / 8 * 4)); left: calc((20% / 9 * 2) + (80% / 8 * 1)); }
-.yx42 { top: calc((20% / 9 * 5) + (80% / 8 * 4)); left: calc((20% / 9 * 3) + (80% / 8 * 2)); }
-.yx43 { top: calc((20% / 9 * 5) + (80% / 8 * 4)); left: calc((20% / 9 * 4) + (80% / 8 * 3)); }
-.yx44 { top: calc((20% / 9 * 5) + (80% / 8 * 4)); left: calc((20% / 9 * 5) + (80% / 8 * 4)); }
-.yx45 { top: calc((20% / 9 * 5) + (80% / 8 * 4)); left: calc((20% / 9 * 6) + (80% / 8 * 5)); }
-.yx46 { top: calc((20% / 9 * 5) + (80% / 8 * 4)); left: calc((20% / 9 * 7) + (80% / 8 * 6)); }
-.yx47 { top: calc((20% / 9 * 5) + (80% / 8 * 4)); left: calc((20% / 9 * 8) + (80% / 8 * 7)); }
-
-.yx50 { top: calc((20% / 9 * 6) + (80% / 8 * 5)); left: calc(20% / 9 * 1); }
-.yx51 { top: calc((20% / 9 * 6) + (80% / 8 * 5)); left: calc((20% / 9 * 2) + (80% / 8 * 1)); }
-.yx52 { top: calc((20% / 9 * 6) + (80% / 8 * 5)); left: calc((20% / 9 * 3) + (80% / 8 * 2)); }
-.yx53 { top: calc((20% / 9 * 6) + (80% / 8 * 5)); left: calc((20% / 9 * 4) + (80% / 8 * 3)); }
-.yx54 { top: calc((20% / 9 * 6) + (80% / 8 * 5)); left: calc((20% / 9 * 5) + (80% / 8 * 4)); }
-.yx55 { top: calc((20% / 9 * 6) + (80% / 8 * 5)); left: calc((20% / 9 * 6) + (80% / 8 * 5)); }
-.yx56 { top: calc((20% / 9 * 6) + (80% / 8 * 5)); left: calc((20% / 9 * 7) + (80% / 8 * 6)); }
-.yx57 { top: calc((20% / 9 * 6) + (80% / 8 * 5)); left: calc((20% / 9 * 8) + (80% / 8 * 7)); }
-
-.yx60 { top: calc((20% / 9 * 7) + (80% / 8 * 6)); left: calc(20% / 9 * 1); }
-.yx61 { top: calc((20% / 9 * 7) + (80% / 8 * 6)); left: calc((20% / 9 * 2) + (80% / 8 * 1)); }
-.yx62 { top: calc((20% / 9 * 7) + (80% / 8 * 6)); left: calc((20% / 9 * 3) + (80% / 8 * 2)); }
-.yx63 { top: calc((20% / 9 * 7) + (80% / 8 * 6)); left: calc((20% / 9 * 4) + (80% / 8 * 3)); }
-.yx64 { top: calc((20% / 9 * 7) + (80% / 8 * 6)); left: calc((20% / 9 * 5) + (80% / 8 * 4)); }
-.yx65 { top: calc((20% / 9 * 7) + (80% / 8 * 6)); left: calc((20% / 9 * 6) + (80% / 8 * 5)); }
-.yx66 { top: calc((20% / 9 * 7) + (80% / 8 * 6)); left: calc((20% / 9 * 7) + (80% / 8 * 6)); }
-.yx67 { top: calc((20% / 9 * 7) + (80% / 8 * 6)); left: calc((20% / 9 * 8) + (80% / 8 * 7)); }
-
-.yx70 { top: calc((20% / 9 * 8) + (80% / 8 * 7)); left: calc(20% / 9 * 1); }
-.yx71 { top: calc((20% / 9 * 8) + (80% / 8 * 7)); left: calc((20% / 9 * 2) + (80% / 8 * 1)); }
-.yx72 { top: calc((20% / 9 * 8) + (80% / 8 * 7)); left: calc((20% / 9 * 3) + (80% / 8 * 2)); }
-.yx73 { top: calc((20% / 9 * 8) + (80% / 8 * 7)); left: calc((20% / 9 * 4) + (80% / 8 * 3)); }
-.yx74 { top: calc((20% / 9 * 8) + (80% / 8 * 7)); left: calc((20% / 9 * 5) + (80% / 8 * 4)); }
-.yx75 { top: calc((20% / 9 * 8) + (80% / 8 * 7)); left: calc((20% / 9 * 6) + (80% / 8 * 5)); }
-.yx76 { top: calc((20% / 9 * 8) + (80% / 8 * 7)); left: calc((20% / 9 * 7) + (80% / 8 * 6)); }
-.yx77 { top: calc((20% / 9 * 8) + (80% / 8 * 7)); left: calc((20% / 9 * 8) + (80% / 8 * 7)); }
 
 @media (max-width: 800px) {
     .game-box {

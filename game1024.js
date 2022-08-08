@@ -7,8 +7,8 @@ game1024 = {
     animationTime: 300,
     root: undefined,
     readyOfAction: false,
-    rootColumn: 8,
-    rootRow: 8,
+    rootColumn: 4,// 변경시 css 전부 바꿔야함
+    rootRow: 4,// 변경시 css 전부 바꿔야함
     startNumber: 2, //2의 n 승 숫자만 가능(디자인 관련문제).
     goalNumber: Math.pow(2, 10), // startNumber 의 10승
     numberClassPrefix: 'item-num',
